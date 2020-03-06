@@ -65,6 +65,9 @@ class QuestionsController extends Controller
     public function show(Question $question)
     {
         //T
+        $question->increment('views');
+
+        return  view('questions.show', compact('question'));
     }
 
     /**
@@ -106,7 +109,7 @@ class QuestionsController extends Controller
      * @param  \App\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Question $question)
+    public function     destroy(Question $question)
     {
         //
         $this->authorize('delete',$question);
