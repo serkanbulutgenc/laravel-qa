@@ -71,6 +71,11 @@ class AnswerPolicy
         //
     }
 
+    public function accept(User $user, Answer $answer)
+    {
+        return $user->id === $answer->question->user_id;
+    }
+
     /**
      * Determine whether the user can permanently delete the answer.
      *
