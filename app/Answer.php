@@ -8,7 +8,9 @@ class Answer extends Model
 {
     use VotableTrait;
     //
-    protected $guarded=[];
+    protected $fillable=['body','user_id'];
+
+    protected $appends = ['created_date'];
 
     public function user()
     {
