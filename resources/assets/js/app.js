@@ -17,6 +17,7 @@ window.Vue = require('vue');
  */
 
 Vue.component('user-info', require('./components/UserInfo'));
+Vue.component('answer', require('./components/Answer'));
 
 const app = new Vue({
     el: '#app'
