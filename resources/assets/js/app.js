@@ -22,6 +22,7 @@ Vue.use(VueIzıToast);
 
 Vue.component('user-info', require('./components/UserInfo'));
 Vue.component('answer', require('./components/Answer'));
+Vue.component('favorite', require('./components/Favorite'));
 
 const app = new Vue({
     el: '#app'
