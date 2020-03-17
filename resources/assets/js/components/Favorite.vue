@@ -46,9 +46,6 @@
             },
         },
         computed:{
-            signedIn(){
-                return window.Auth.signedIn;
-            },
             endpoint(){
                 return `/questions/${this.id}/favorites`
             },

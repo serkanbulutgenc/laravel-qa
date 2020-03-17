@@ -10,10 +10,13 @@ require('./fontawesome');
 
 window.Vue = require('vue');
 
-import VueIzıToast from 'vue-izitoast';
+import VueIziToast from 'vue-izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import  Authorization from './authorization/authorize';
 
-Vue.use(VueIzıToast);
+Vue.use(VueIziToast);
+Vue.use(Authorization);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

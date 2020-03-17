@@ -1,8 +1,8 @@
 <template>
     <div>
-        <a :class="classes" title="Mark this answer as best answer"
-           @click.prevent="create"
-           v-if="canAccept">
+        <a :class="classes" @click.prevent="create"
+           title="Mark this answer as best answer"
+           v-if="authorize('accept',answer)">
             <i class="fas fa-check fa-2x"></i>
             <span class="favorites-count">123 </span>
         </a>
@@ -39,7 +39,7 @@
         },
         computed: {
             canAccept() {
-                return true
+                return this.authorize('accept',this.answer);
             },
             accepted() {
                 return !this.canAccept && this.isBest;
