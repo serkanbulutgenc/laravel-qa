@@ -1,42 +1,81 @@
+<template>
+    <div class="media post">
+        <vote :model="answer" name="answer"></vote>
+        <div class="media-body">
+            <form @submit.prevent="update" v-if="editing">
+                <div class="form-group">
+                    <textarea class="form-control" required rows="10" v-model="body"></textarea>
+                </div>
+                <button :disabled="isInvalid" class="btn btn-primary">Update</button>
+                <button @click="cancel" class="btn btn-outline-secondary" type="button">Cancel</button>
+            </form>
+            <div v-else>
+                <div v-html="bodyHtml"></div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="ml-auto">
+                            <a @click.prevent="edit"
+                               class="btn btn-sm btn-outline-info"
+                               v-if="authorize('modify',answer)">
+                                Edit
+                            </a>
+                        </div>
+
+                        <button @click="destroy"
+                                class="btn btn-sm btn-outline-danger"
+                                v-if="authorize('modify',answer)"
+                                type="button">Delete
+                        </button>
+
+                    </div>
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        <user-info :model="answer" label="Answered"></user-info>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
 <script>
     export default {
-        props:['answer'],
+        props: ['answer'],
         name: "Answer",
-        data(){
+        data() {
             return {
-                editing:false,
-                body:this.answer.body,
-                bodyHtml:this.answer.body_html,
-                id:this.answer.id,
-                questionId:this.answer.question_id,
-                beforeEditCache:null,
+                editing: false,
+                body: this.answer.body,
+                bodyHtml: this.answer.body_html,
+                id: this.answer.id,
+                questionId: this.answer.question_id,
+                beforeEditCache: null,
             }
         },
-        methods:{
-            edit(){
+        methods: {
+            edit() {
                 this.beforeEditCache = this.body;
-                this.editing=true;
+                this.editing = true;
             },
-            cancel(){
-                this.body=this.beforeEditCache;
+            cancel() {
+                this.body = this.beforeEditCache;
                 this.editing = false;
             },
-            update(){
-                axios.patch(this.endpoint,{
+            update() {
+                axios.patch(this.endpoint, {
                     body: this.body
                 })
-                .then(res=>{
-                    this.editing =false;
-                    this.bodyHtml =res.data.body_html;
-                    this.$toast.success(res.data.message,'Success',{timeout:3000});
-                })
-                .catch(err=>{
-                    //alert(err.response.data.message);
-                    this.$toast.error(err.response.data.message,'Error ',{timeout:3000})
-                })
+                    .then(res => {
+                        this.editing = false;
+                        this.bodyHtml = res.data.body_html;
+                        this.$toast.success(res.data.message, 'Success', {timeout: 3000});
+                    })
+                    .catch(err => {
+                        //alert(err.response.data.message);
+                        this.$toast.error(err.response.data.message, 'Error ', {timeout: 3000})
+                    })
             },
-            destroy(){
-                this.$toast.question('Are you sure about that?','Confirm',{
+            destroy() {
+                this.$toast.question('Are you sure about that?', 'Confirm', {
                     timeout: 20000,
                     close: false,
                     overlay: true,
@@ -45,32 +84,35 @@
                     zindex: 999,
                     position: 'center',
                     buttons: [
-                        ['<button><b>YES</b></button>', (instance, toast)=> {
+                        ['<button><b>YES</b></button>', (instance, toast) => {
 
-                                axios.delete(this.endpoint)
-                                    .then(res =>{
-                                        $(this.$el).fadeOut(500,()=>{
-                                            this.$toast.success(res.data.message,'Success',{timeout:3000})
-                                        });
-                                    })
-                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            axios.delete(this.endpoint)
+                                .then(res => {
+                                    $(this.$el).fadeOut(500, () => {
+                                        this.$toast.success(res.data.message, 'Success', {timeout: 3000})
+                                    });
+                                })
+                            instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
                         }, true],
                         ['<button>NO</button>', function (instance, toast) {
 
-                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
 
                         }],
                     ]
                 });
             }
         },
-        computed:{
-            isInvalid(){
-                return this.body.length <10;
+        computed: {
+            isInvalid() {
+                return this.body.length < 10;
             },
-            endpoint(){
+            endpoint() {
                 return `/questions/${this.questionId}/answers/${this.id}`;
             }
+        },
+        mounted() {
+
         }
     }
 </script>

@@ -8,6 +8,7 @@
         </a>
 
         <span class="votes-count">{{ count }}</span>
+
         <a :title="title('down')"
            @click.prevent="voteDown"
            class="votes-down" :class="classes"

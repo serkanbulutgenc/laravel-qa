@@ -2,15 +2,16 @@
     <div>
         <a :class="classes" @click.prevent="create"
            title="Mark this answer as best answer"
-           v-if="authorize('accept',answer)">
+           v-if="canAccept">
             <i class="fas fa-check fa-2x"></i>
             <span class="favorites-count">123 </span>
         </a>
-        <a :class="classes" title="The question answer accepted this answer as best answer"
+        <a :class="classes"
+           title="The question answer accepted this answer as best answer"
            v-if="accepted"
         >
             <i class="fas fa-check fa-2x"></i>
-            <span class="favorites-count">123 </span>
+            <span class="favorites-count"> </span>
         </a>
     </div>
 </template>
