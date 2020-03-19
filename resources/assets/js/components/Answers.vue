@@ -7,7 +7,7 @@
                         <h2>{{title}}</h2>
                     </div>
                     <hr>
-                    <answer :answer="answer" :key="answer.id" v-for="answer in answers"></answer>
+                    <answer @deleted="remove(index)" :answer="answer" :key="answer.id" v-for="(answer,index) in answers"></answer>
 
                     <div class="text-center mt-3" v-if="nextUrl">
                         <button
@@ -37,6 +37,10 @@
         },
         components: {Answer},
         methods:{
+            remove(index){
+                this.answers.splice(index,1)
+                this.count--
+            },
             fetch(endpoint){
                 axios.get(endpoint)
                 .then(({data})=>{
