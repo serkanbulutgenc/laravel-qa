@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Question;
-use Illuminate\Http\Request;
 
 class VoteQuestionController extends Controller
 {
@@ -18,15 +17,20 @@ class VoteQuestionController extends Controller
 
     public function __invoke(Question $question)
     {
-        $vote = (int) request()->vote;
+        $vote = (int)request()->vote;
 
         $votesCount = auth()->user()->voteQuestion($question, $vote);
 
-        if(request()->expectsJson()){
-            return response()->json([
-                'message'=>'Thanks for voting',
-                'votesCount'=>$votesCount
-            ]);
+        if ( request()->expectsJson()
+        ) {
+            return response()
+
+                ->json(                [
+                    'message'=>'Thanks for voting',
+                    'votesCount' => $votesCount
+
+                ]
+            );
         }
 
         return back();
