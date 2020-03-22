@@ -38,9 +38,13 @@
     </div>
 </template>
 <script>
+    import UserInfo from "./UserInfo";
+    import Vote from "./Vote";
+
     export default {
         props: ['answer'],
         name: "Answer",
+        components:{UserInfo,Vote},
         data() {
             return {
                 editing: false,

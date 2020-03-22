@@ -22,10 +22,7 @@ Vue.use(Authorization);
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
-Vue.component('user-info', require('./components/UserInfo'));
-Vue.component('vote', require('./components/Vote'));
-Vue.component('answers', require('./components/Answers'));
+Vue.component('questionPage', require('./pages/QuestionPage'));
 
 const app = new Vue({
     el: '#app'
