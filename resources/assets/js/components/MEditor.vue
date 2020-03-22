@@ -23,7 +23,11 @@
 <script>
     import MarkdownIt from 'markdown-it'
     import autosize from 'autosize'
+    import prism from 'markdown-it-prism'
+
     const md = new MarkdownIt()
+    md.use(prism)
+
     export default {
         name: "MEditor",
         props:['body'],
