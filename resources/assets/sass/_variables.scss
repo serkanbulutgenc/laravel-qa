@@ -1,6 +1,7 @@
 
+$color-white:#fff;
 // Body
-$body-bg: #f5f8fa;
+$body-bg: $color-white;
 
 // Typography
 $font-family-sans-serif: "Raleway", sans-serif;
@@ -10,7 +11,7 @@ $text-color: #636b6f;
 
 $color-green: rgb(95,187,126);
 
-$color-white:#fff;
+
 
 // Navbar
 $navbar-default-bg: #fff;
