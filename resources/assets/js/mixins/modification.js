@@ -15,14 +15,14 @@ export default {
         },
         payload(){},
         update(){
-            axios.put(this.endpoint,this.payload)
-                .then(({response})=>{
+            axios.put(this.endpoint,this.payload())
+                .then(({data})=>{
                     this.bodyHtml = data.body_html
-                    this.$toast.success(response.data.message,'Success',{timeout:3000})
+                    this.$toast.success(data.message,'Success',{timeout:3000})
                     this.editing=false
                 })
-                .catch(({data})=>{
-                    this.$toast.error(data.message,'Error',{timeout:3000})
+                .catch(({response})=>{
+                    this.$toast.error(response.data.message,'Error',{timeout:3000})
                 })
         },
         delete(){},
