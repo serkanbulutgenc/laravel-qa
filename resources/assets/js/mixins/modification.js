@@ -1,9 +1,12 @@
+import highlight from "./highlight";
+
 export default {
     data(){
         return {
             editing:false
         }
     },
+    mixins:[highlight],
     methods:{
         edit(){
             this.setEditCache()
@@ -19,8 +22,9 @@ export default {
                 .then(({data})=>{
                     this.bodyHtml = data.body_html
                     this.$toast.success(data.message,'Success',{timeout:3000})
-                    this.editing=false
+                    this.editing = false
                 })
+                .then(()=>this.highlight())
                 .catch(({response})=>{
                     this.$toast.error(response.data.message,'Error',{timeout:3000})
                 })
