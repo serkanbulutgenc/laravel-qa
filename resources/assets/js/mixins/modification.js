@@ -1,11 +1,14 @@
 import highlight from "./highlight";
-
+import UserInfo from "../components/UserInfo";
+import Vote from "../components/Vote";
+import MEditor from "../components/MEditor";
 export default {
     data(){
         return {
             editing:false
         }
     },
+    components:{UserInfo,Vote,MEditor},
     mixins:[highlight],
     methods:{
         edit(){

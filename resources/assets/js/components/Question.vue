@@ -10,7 +10,7 @@
                     <div class="media">
                         <div class="media-body">
                             <div class="form-group">
-                                <m-editor :body="body">
+                                <m-editor :body="body" :name="uniqueName">
                                     <textarea class="form-control" required rows="10" v-model="body"></textarea>
                                 </m-editor>
                             </div>
@@ -69,16 +69,12 @@
 </template>
 
 <script>
-    import UserInfo from "./UserInfo";
-    import Vote from "./Vote";
     import modification from "../mixins/modification";
-    import MEditor from "./MEditor";
 
     export default {
         name: "Question",
         props: ['question'],
         mixins:[modification],
-        components:{UserInfo,Vote,MEditor},
         data() {
             return {
                 title: this.question.title,
@@ -89,6 +85,9 @@
             }
         },
         computed:{
+            uniqueName(){
+                return  `answer-${this.id}`
+            },
             isInvalid(){
                 return this.body.length < 10 || this.title.length < 10
             },
