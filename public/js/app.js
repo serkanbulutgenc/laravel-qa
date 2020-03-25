@@ -84316,7 +84316,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -84373,7 +84373,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             questionId: this.question.id,
             count: this.question.answers_count,
             answers: [],
-            nextUrl: null
+            nextUrl: null,
+            answerIds: []
         };
     },
 
@@ -84386,13 +84387,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         fetch: function fetch(endpoint) {
             var _this = this;
 
+            this.answerIds = [];
             axios.get(endpoint).then(function (_ref) {
                 var _answers;
 
                 var data = _ref.data;
 
+                _this.answerIds = data.data.map(function (a) {
+                    return a.id;
+                });
                 (_answers = _this.answers).push.apply(_answers, _toConsumableArray(data.data));
                 _this.nextUrl = data.next_page_url;
+            }).then(function () {
+                _this.answerIds.forEach(function (id) {
+                    _this.highlight("answer-" + id);
+                });
             });
         },
         add: function add(answer) {
