@@ -13,18 +13,7 @@
                         </div>
 
                     </div>
-
-                    <div class="card-body">
-
-                        <div v-if="questions.length">
-                            <question-excerpt v-for="question in questions" :question="question" :key="question.id"></question-excerpt>
-                        </div>
-                        <div v-else class="alert alert-warning">
-                            <strong>Sory !!</strong> There are no questions available
-                        </div>
-
-                        <!-- {{ $questions->links( ) }}-->
-                    </div>
+                    <questions></questions>
                 </div>
             </div>
         </div>
@@ -32,10 +21,11 @@
 </template>
 
 <script>
-    import QuestionExcerpt from "../components/QuestionExcerpt";
+    import Questions from "../components/Questions";
+
     export default {
         name: "QuestionsPage",
-        components:{QuestionExcerpt},
+        components:{Questions},
         data(){
             return {
                 questions:[]
