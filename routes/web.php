@@ -11,23 +11,25 @@
 |
 */
 
-
-Auth::routes();
-
-Route::view('/{any}','spa')->where('any','.*');
-
 Route::get('/','QuestionsController@index');
+Auth::routes(['verify'=>true]);
+//Route::view('/{any}','spa')->where('any','.*');
 
 
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::resource('questions','QuestionsController')->except('show');
+Route::middleware('verified')->group( function (){
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::resource('questions','QuestionsController')->except('show','index');
 //Route::post('/questions/{question}/answers', 'AnswersController@store')->name('answers.store ');
-Route::resource('questions.answers','AnswersController')->except(['create','show']);
-Route::get('/questions/{slug}', 'QuestionsController@show')->name('questions.show');
-Route::post('/answer/{answer}/accept', 'AcceptAnswerController')->name('answers.accept');
+    Route::resource('questions.answers','AnswersController')->except(['create','show']);
+    Route::post('/answer/{answer}/accept', 'AcceptAnswerController')->name('answers.accept');
 
-Route::post('/questions/{question}/favorites', 'FavoritesController@store')->name('questions.favorite');
-Route::delete('/questions/{question}/favorites', 'FavoritesController@destroy')->name('questions.unfavorite');
-Route::post('/questions/{question}/vote','VoteQuestionController');
-Route::post('/answers/{answer}/vote','VoteAnswerController');
+    Route::post('/questions/{question}/favorites', 'FavoritesController@store')->name('questions.favorite');
+    Route::delete('/questions/{question}/favorites', 'FavoritesController@destroy')->name('questions.unfavorite');
+    Route::post('/questions/{question}/vote','VoteQuestionController');
+    Route::post('/answers/{answer}/vote','VoteAnswerController');
+
+
+});
+Route::get('/questions/{slug}', 'QuestionsController@show')->name('questions.show');
+Route::get('/questions', 'QuestionsController@index')->name('questions.index');
+
