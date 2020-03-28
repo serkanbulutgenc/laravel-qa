@@ -18,9 +18,11 @@
                 </h3>
                 <div class="ml-auto">
 
-                    <a href="#"
-                       v-if="authorize('modify',question)"
-                       class="btn btn-sm btn-outline-info">Edit</a>
+                    <router-link
+                    :to="{name:'questions.edit',params:{id:question.id}}"
+                    class="btn btn-sm btn-outline-info"
+                    v-if="authorize('modify',question)"
+                    >Edit</router-link>
 
 
 

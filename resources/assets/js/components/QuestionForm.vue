@@ -33,38 +33,56 @@
 
     export default {
         name: "QuestionForm",
-        components:{MEditor},
-        data(){
+        components: {MEditor},
+        props: {
+            isEdit: {
+                type: Boolean,
+                default: false
+            }
+        },
+        data() {
             return {
-                title:'',
-                body:'',
-                errors:{
-                    title:[],
-                    body:[]
+                title: '',
+                body: '',
+                errors: {
+                    title: [],
+                    body: []
                 }
             }
         },
-        methods:{
+        methods: {
             handleSubmit() {
-                this.$emit('submitted',{
-                    title:this.title,
-                    body:this.body,
+                this.$emit('submitted', {
+                    title: this.title,
+                    body: this.body,
                 })
             },
-            errorClass(column){
+            errorClass(column) {
                 return [
                     'form-control',
-                    this.errors[column] && this.errors[column][0] ? 'is-invalid' :''
+                    this.errors[column] && this.errors[column][0] ? 'is-invalid' : ''
                 ]
+            },
+            fetchQuestion() {
+                axios.get(`/questions/${this.$route.params.id}`)
+                    .then(({data}) => {
+                        this.title = data.title,
+                            this.body = data.body
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             }
         },
-        computed:{
-            buttonText(){
-                return 'Ask Questions'
+        computed: {
+            buttonText() {
+                return this.isEdit ? 'Update Question' : 'Ask Question'
             }
         },
         mounted() {
-            EventBus.$on('error', errors => this.errors=errors )
+            EventBus.$on('error', errors => this.errors = errors)
+
+            if (this.isEdit) this.fetchQuestion()
         }
     }
 </script>
