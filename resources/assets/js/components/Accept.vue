@@ -17,7 +17,7 @@
 </template>
 
 <script>
-    import eventBus from "../EventBus";
+    import EventBus from "../EventBus";
     export default {
         props: ['answer'],
         name: "Accept",
@@ -37,7 +37,7 @@
                     });
                     this.isBest = true
 
-                    eventBus.$emit('accepted',this.id)
+                    EventBus.$emit('accepted',this.id)
                 })
             }
         },
@@ -56,7 +56,7 @@
             }
         },
         created() {
-            eventBus.$on('accepted',id=>{
+            EventBus.$on('accepted',id=>{
                 this.isBest = ( id === this.id)
             })
         }

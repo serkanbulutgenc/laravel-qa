@@ -7,7 +7,7 @@ export default {
     accept(user, answer){
         //console.log(user.id);
         //return user.id === answer.question.user.id
-        return user.id === answer.question.user_id;
+        return user.id === answer.question_user_id;
         //return true;
     },
     deleteQuestion(user, question){

@@ -1,13 +1,121 @@
 <template>
-<h1>Curent User's post page</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <router-link
+                                        exact
+                                        class="nav-link active"
+                                        :to="{name:'my-posts'}">
+                                    All
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link
+                                        exact
+                                        class="nav-link"
+                                        :to="{name:'my-posts',query:{type:'questions'}}">
+                                    Questions
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link
+                                        exact
+                                        class="nav-link"
+                                        :to="{name:'my-posts',query:{type:'answers'}}">
+                                    Answers
+                                </router-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush" v-if="posts.length">
+                            <li class="list-group-item" v-for="(post,index) in posts" :key="index">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="post-badge" :class="{'accepted': post.accepted}">{{post.type}}</span>
+                                        <span class="votes-count ml-4" :class="{'accepted': post.accepted}">{{ post.votes_count}}</span>
+                                    </div>
+                                    <div class="col-md-9 text-left">
+                                        {{ post.title }}
+                                    </div>
+                                    <div class="col text-right">
+                                        {{post.created_at}}
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                        <div class="alert alert-warning" v-else>
+                            <p>You have any question or answers</p>
+                            <p>
+                                <router-link :to="{name:'questions.create'}">
+                                    Ask Question
+                                </router-link>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
     export default {
-        name: "MyPostsPage"
+        name: "MyPostsPage",
+        data(){
+            return {
+                posts:[]
+            }
+        },
+        methods:{
+            fetchPosts(){
+                axios.get('/my-posts',{params:this.$route.query})
+                .then(({data})=>{
+                    this.posts = data.data
+                    console.log(data)
+                })
+                .catch(err => { console.log(err)})
+            }
+        },
+        watch:{
+            "$route":'fetchPosts'
+        },
+        mounted() {
+            this.fetchPosts()
+        }
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    $color-green:rgba(95,187,126);
 
+    .votes-count{
+    border:1px solid #ddd;
+    display: inline-block;
+    min-width: 40px;
+    text-align: center;
+
+    &.accepted{
+        background: $color-green;
+        border: 1px solid $color-green;
+        color: #fff;
+        }
+    }
+    .post-badge{
+        border:1px solid #ddd;
+        display: inline-block;
+        width: 25px;
+        text-align: center;
+        border-radius: 100%;
+
+        &.accepted{
+            border: 1px solid $color-green;
+            color: $color-green;
+        }
+    }
 </style>
