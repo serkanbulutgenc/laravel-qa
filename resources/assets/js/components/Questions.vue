@@ -5,7 +5,6 @@
             <spinner v-if="$root.loading"></spinner>
             <div v-else-if="questions.length">
                 <question-excerpt
-                        @deleted="remove(index)"
                         v-for="question in questions"
                         :question="question"
                         :key="question.id"></question-excerpt>
@@ -25,6 +24,7 @@
 <script>
     import QuestionExcerpt from "./QuestionExcerpt";
     import Pagination from "./Pagination";
+    import EventBus from "../EventBus";
 
     export default {
         name: "Questions",
@@ -55,6 +55,11 @@
         },
         mounted() {
             this.fetchQuestions()
+
+            EventBus.$on('deleted',(id)=>{
+                let index = this.questions.findIndex(question=>id === question.id)
+                this.remove(index)
+            })
         }
     }
 </script>

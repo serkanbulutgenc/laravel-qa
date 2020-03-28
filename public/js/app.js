@@ -12219,7 +12219,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     pagesInfo: function pagesInfo() {
-      return "Page ".concat(this.meta.current_page, " of ").concat(this.meta.last_page);
+      var currentPage = this.meta.current_page || 1;
+      var lastPage = this.meta.last_page || 1;
+      return "Page ".concat(currentPage, " of ").concat(lastPage);
     },
     isFirst: function isFirst() {
       return this.meta.current_page === 1;
@@ -12398,6 +12400,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_destroy__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../mixins/destroy */ "./resources/assets/js/mixins/destroy.js");
+/* harmony import */ var _EventBus__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../EventBus */ "./resources/assets/js/EventBus.js");
 //
 //
 //
@@ -12445,6 +12448,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['question'],
@@ -12464,7 +12468,9 @@ __webpack_require__.r(__webpack_exports__);
           timeout: 2000
         });
 
-        _this.$emit('deleted');
+        _EventBus__WEBPACK_IMPORTED_MODULE_1__["default"].$emit('deleted', _this.question.id);
+
+        _this.$root.enableInterceptor();
       });
     }
   },
@@ -12592,6 +12598,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _QuestionExcerpt__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuestionExcerpt */ "./resources/assets/js/components/QuestionExcerpt.vue");
 /* harmony import */ var _Pagination__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Pagination */ "./resources/assets/js/components/Pagination.vue");
+/* harmony import */ var _EventBus__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../EventBus */ "./resources/assets/js/EventBus.js");
 //
 //
 //
@@ -12615,7 +12622,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -12653,7 +12660,16 @@ __webpack_require__.r(__webpack_exports__);
     "$route": 'fetchQuestions'
   },
   mounted: function mounted() {
+    var _this2 = this;
+
     this.fetchQuestions();
+    _EventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('deleted', function (id) {
+      var index = _this2.questions.findIndex(function (question) {
+        return id === question.id;
+      });
+
+      _this2.remove(index);
+    });
   }
 });
 
@@ -66504,12 +66520,7 @@ var render = function() {
               _vm._l(_vm.questions, function(question) {
                 return _c("question-excerpt", {
                   key: question.id,
-                  attrs: { question: question },
-                  on: {
-                    deleted: function($event) {
-                      return _vm.remove(_vm.index)
-                    }
-                  }
+                  attrs: { question: question }
                 })
               }),
               1
@@ -82263,34 +82274,43 @@ Vue.component('spinner', _components_Spinner__WEBPACK_IMPORTED_MODULE_4__["defau
 var app = new Vue({
   el: '#app',
   data: {
-    loading: false
+    loading: false,
+    interceptor: null
   },
   router: _router__WEBPACK_IMPORTED_MODULE_3__["default"],
+  methods: {
+    enableInterceptor: function enableInterceptor() {
+      var _this = this;
+
+      // Add a request interceptor
+      axios.interceptors.request.use(function (config) {
+        // Do something before request is sent
+        _this.loading = true;
+        return config;
+      }, function (error) {
+        // Do something with request error
+        _this.loading = false;
+        return Promise.reject(error);
+      }); // Add a response interceptor
+
+      axios.interceptors.response.use(function (response) {
+        // Any status code that lie within the range of 2xx cause this  to trigger
+        // Do something with response data
+        _this.loading = false;
+        return response;
+      }, function (error) {
+        // Any status codes that falls outside the range of 2xx cause this function to trigger
+        // Do something with response error
+        _this.loading = false;
+        return Promise.reject(error);
+      });
+    },
+    disableInterceptor: function disableInterceptor() {
+      axios.interceptors.request.eject(this.interceptor);
+    }
+  },
   created: function created() {
-    var _this = this;
-
-    // Add a request interceptor
-    axios.interceptors.request.use(function (config) {
-      // Do something before request is sent
-      _this.loading = true;
-      return config;
-    }, function (error) {
-      // Do something with request error
-      _this.loading = false;
-      return Promise.reject(error);
-    }); // Add a response interceptor
-
-    axios.interceptors.response.use(function (response) {
-      // Any status code that lie within the range of 2xx cause this  to trigger
-      // Do something with response data
-      _this.loading = false;
-      return response;
-    }, function (error) {
-      // Any status codes that falls outside the range of 2xx cause this function to trigger
-      // Do something with response error
-      _this.loading = false;
-      return Promise.reject(error);
-    });
+    this.enableInterceptor();
   }
 });
 
@@ -84065,7 +84085,7 @@ var routes = [{
   component: _pages_EditQuestionPage__WEBPACK_IMPORTED_MODULE_5__["default"],
   name: 'questions.edit'
 }, {
-  path: '/my-posts',
+  path: '/home',
   component: _pages_MyPostsPage__WEBPACK_IMPORTED_MODULE_2__["default"],
   name: 'my-posts',
   meta: {
