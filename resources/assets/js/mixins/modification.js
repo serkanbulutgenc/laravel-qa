@@ -2,6 +2,8 @@ import highlight from "./highlight";
 import UserInfo from "../components/UserInfo";
 import Vote from "../components/Vote";
 import MEditor from "../components/MEditor";
+import destroy from "./destroy";
+
 export default {
     data(){
         return {
@@ -9,7 +11,7 @@ export default {
         }
     },
     components:{UserInfo,Vote,MEditor},
-    mixins:[highlight],
+    mixins:[highlight, destroy],
     methods:{
         edit(){
             this.setEditCache()
@@ -31,30 +33,6 @@ export default {
                 .catch(({response})=>{
                     this.$toast.error(response.data.message,'Error',{timeout:3000})
                 })
-        },
-        delete(){},
-        destroy() {
-            this.$toast.question('Are you sure about that?', 'Confirm', {
-                timeout: 20000,
-                close: false,
-                overlay: true,
-                displayMode: 'once',
-                id: 'question',
-                zindex: 999,
-                position: 'center',
-                buttons: [
-                    ['<button><b>YES</b></button>', (instance, toast) => {
-
-                        this.delete();
-                        instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
-                    }, true],
-                    ['<button>NO</button>', function (instance, toast) {
-
-                        instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
-
-                    }],
-                ]
-            });
         },
         setEditCache(){},
         restoreFromCache(){},

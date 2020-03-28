@@ -12363,6 +12363,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _mixins_destroy__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../mixins/destroy */ "./resources/assets/js/mixins/destroy.js");
 //
 //
 //
@@ -12409,14 +12410,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['question'],
   name: "QuestionExcerpt",
+  mixins: [_mixins_destroy__WEBPACK_IMPORTED_MODULE_0__["default"]],
   methods: {
     str_plural: function str_plural(str, count) {
       return str + (count > 1 ? 's' : '');
+    },
+    "delete": function _delete() {
+      var _this = this;
+
+      axios["delete"]('/questions/' + this.question.id).then(function (_ref) {
+        var data = _ref.data;
+
+        _this.$toast.success(data.message, 'Success', {
+          timeout: 2000
+        });
+
+        _this.$emit('deleted');
+      });
     }
   },
   computed: {
@@ -12560,6 +12574,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -12576,6 +12594,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    remove: function remove(index) {
+      this.questions.splice(index, 1);
+      this.count--;
+    },
     fetchQuestions: function fetchQuestions() {
       var _this = this;
 
@@ -65984,30 +66006,18 @@ var render = function() {
                       }
                     }
                   },
-                  [_vm._v("Edit")]
+                  [_vm._v("\n                    Edit\n                ")]
                 )
               : _vm._e(),
             _vm._v(" "),
             _vm.authorize("deleteQuestion", _vm.question)
               ? _c(
-                  "form",
+                  "button",
                   {
-                    staticClass: "form-delete",
-                    attrs: { method: "post", action: "#" }
+                    staticClass: "btn btn-sm btn-outline-danger",
+                    on: { click: _vm.destroy }
                   },
-                  [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-sm btn-outline-danger",
-                        attrs: {
-                          type: "submit",
-                          onclick: "return confirm('Are you sure ?')"
-                        }
-                      },
-                      [_vm._v("Delete\n                    ")]
-                    )
-                  ]
+                  [_vm._v("\n                    Delete\n                ")]
                 )
               : _vm._e()
           ],
@@ -66179,7 +66189,12 @@ var render = function() {
             _vm._l(_vm.questions, function(question) {
               return _c("question-excerpt", {
                 key: question.id,
-                attrs: { question: question }
+                attrs: { question: question },
+                on: {
+                  deleted: function($event) {
+                    return _vm.remove(_vm.index)
+                  }
+                }
               })
             }),
             1
@@ -82491,15 +82506,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************************!*\
   !*** ./resources/assets/js/components/QuestionForm.vue ***!
   \*********************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _QuestionForm_vue_vue_type_template_id_399b7681_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuestionForm.vue?vue&type=template&id=399b7681&scoped=true& */ "./resources/assets/js/components/QuestionForm.vue?vue&type=template&id=399b7681&scoped=true&");
 /* harmony import */ var _QuestionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuestionForm.vue?vue&type=script&lang=js& */ "./resources/assets/js/components/QuestionForm.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _QuestionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _QuestionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -82529,7 +82543,7 @@ component.options.__file = "resources/assets/js/components/QuestionForm.vue"
 /*!**********************************************************************************!*\
   !*** ./resources/assets/js/components/QuestionForm.vue?vue&type=script&lang=js& ***!
   \**********************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -82783,6 +82797,47 @@ _fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_0__["dom"].watch();
 
 /***/ }),
 
+/***/ "./resources/assets/js/mixins/destroy.js":
+/*!***********************************************!*\
+  !*** ./resources/assets/js/mixins/destroy.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  methods: {
+    "delete": function _delete() {},
+    destroy: function destroy() {
+      var _this = this;
+
+      this.$toast.question('Are you sure about that?', 'Confirm', {
+        timeout: 20000,
+        close: false,
+        overlay: true,
+        displayMode: 'once',
+        id: 'question',
+        zindex: 999,
+        position: 'center',
+        buttons: [['<button><b>YES</b></button>', function (instance, toast) {
+          _this["delete"]();
+
+          instance.hide({
+            transitionOut: 'fadeOut'
+          }, toast, 'button');
+        }, true], ['<button>NO</button>', function (instance, toast) {
+          instance.hide({
+            transitionOut: 'fadeOut'
+          }, toast, 'button');
+        }]]
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/assets/js/mixins/highlight.js":
 /*!*************************************************!*\
   !*** ./resources/assets/js/mixins/highlight.js ***!
@@ -82828,6 +82883,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_UserInfo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/UserInfo */ "./resources/assets/js/components/UserInfo.vue");
 /* harmony import */ var _components_Vote__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Vote */ "./resources/assets/js/components/Vote.vue");
 /* harmony import */ var _components_MEditor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/MEditor */ "./resources/assets/js/components/MEditor.vue");
+/* harmony import */ var _destroy__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./destroy */ "./resources/assets/js/mixins/destroy.js");
+
 
 
 
@@ -82843,7 +82900,7 @@ __webpack_require__.r(__webpack_exports__);
     Vote: _components_Vote__WEBPACK_IMPORTED_MODULE_2__["default"],
     MEditor: _components_MEditor__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
-  mixins: [_highlight__WEBPACK_IMPORTED_MODULE_0__["default"]],
+  mixins: [_highlight__WEBPACK_IMPORTED_MODULE_0__["default"], _destroy__WEBPACK_IMPORTED_MODULE_4__["default"]],
   methods: {
     edit: function edit() {
       this.setEditCache();
@@ -82874,31 +82931,6 @@ __webpack_require__.r(__webpack_exports__);
         _this.$toast.error(response.data.message, 'Error', {
           timeout: 3000
         });
-      });
-    },
-    "delete": function _delete() {},
-    destroy: function destroy() {
-      var _this2 = this;
-
-      this.$toast.question('Are you sure about that?', 'Confirm', {
-        timeout: 20000,
-        close: false,
-        overlay: true,
-        displayMode: 'once',
-        id: 'question',
-        zindex: 999,
-        position: 'center',
-        buttons: [['<button><b>YES</b></button>', function (instance, toast) {
-          _this2["delete"]();
-
-          instance.hide({
-            transitionOut: 'fadeOut'
-          }, toast, 'button');
-        }, true], ['<button>NO</button>', function (instance, toast) {
-          instance.hide({
-            transitionOut: 'fadeOut'
-          }, toast, 'button');
-        }]]
       });
     },
     setEditCache: function setEditCache() {},

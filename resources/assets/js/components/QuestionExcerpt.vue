@@ -19,19 +19,17 @@
                 <div class="ml-auto">
 
                     <router-link
-                    :to="{name:'questions.edit',params:{id:question.id}}"
-                    class="btn btn-sm btn-outline-info"
-                    v-if="authorize('modify',question)"
-                    >Edit</router-link>
-
-
-
-                    <form class="form-delete"  v-if="authorize('deleteQuestion',question)" method="post"
-                          action="#">
-                        <button type="submit" class="btn btn-sm btn-outline-danger"
-                                onclick="return confirm('Are you sure ?')">Delete
-                        </button>
-                    </form>
+                            :to="{name:'questions.edit',params:{id:question.id}}"
+                            class="btn btn-sm btn-outline-info"
+                            v-if="authorize('modify',question)">
+                        Edit
+                    </router-link>
+                    <button
+                            @click="destroy"
+                            class="btn btn-sm btn-outline-danger"
+                            v-if="authorize('deleteQuestion',question)">
+                        Delete
+                    </button>
                 </div>
             </div>
             <p class="lead">
@@ -47,17 +45,28 @@
 </template>
 
 <script>
+    import destroy from "../mixins/destroy";
+
     export default {
-        props:['question'],
+        props: ['question'],
         name: "QuestionExcerpt",
-        methods:{
-            str_plural(str,count){
-                return str + (count >1 ? 's': '')
+        mixins:[destroy],
+        methods: {
+            str_plural(str, count) {
+                return str + (count > 1 ? 's' : '')
             },
 
+            delete(){
+                axios.delete('/questions/'+this.question.id)
+                    .then(({data})=>{
+                        this.$toast.success(data.message, 'Success',{timeout:2000})
+                        this.$emit('deleted')
+                    })
+            }
+
         },
-        computed:{
-            statusClasses(){
+        computed: {
+            statusClasses() {
                 return [
                     'status',
                     this.question.status
