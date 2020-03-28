@@ -97,3 +97,12 @@ form.form-delete{
 [v-cloack]{
   display:none;
 }
+
+.fade-enter-active,
+.fade-leave-active{
+  transition: opacity .3s linear;
+}
+.fade-enter,
+.fade-leave-to{
+  opacity: 0;
+}

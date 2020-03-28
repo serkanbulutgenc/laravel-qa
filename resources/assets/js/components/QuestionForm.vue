@@ -22,7 +22,10 @@
 
         </div>
         <div class="form-group">
-            <button class="btn btn-outline-primary btn-lg" type="submit">{{ buttonText }}</button>
+            <button class="btn btn-outline-primary btn-lg" type="submit">
+                <spinner :small="true" v-if="$root.loading"></spinner>
+                <span v-else>{{ buttonText }}</span>
+            </button>
         </div>
     </form>
 </template>

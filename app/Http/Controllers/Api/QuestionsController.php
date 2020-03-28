@@ -19,7 +19,7 @@ class QuestionsController extends Controller
     {
         //
         $questions = Question::with('user')->latest()->paginate(5);
-
+        if(env('APP_ENV') == 'local') sleep(2);
         return QuestionResource::collection($questions);
 
     }
